@@ -38,11 +38,18 @@
         weekFromToday = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
         //Create arrays to hold the names of days / months
         dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',]
+        monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        //Collect the parts of the date to show on the page
+        day = dayNames[weekFromToday.getDay()];
+        date = weekFromToday.getDate();
+        month = monthNames[weekFromToday.getMonth()];
+        year = weekFromToday.getFullYear();
+        //Create the message
+        expiryMsg = 'Offer expires next ';
+        expiryMsg += day +' <br />(' + date + ' ' + month + ' ' + year + ')';
+        return expiryMsg;
     }
-
-}    
-
-
-
-)
+today = new Date();
+elEnds = document.getElementById('offerEnds');
+elEnds.innerHTML = offerExpires(today);
+}());
