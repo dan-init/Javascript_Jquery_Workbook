@@ -1,11 +1,12 @@
-var xhr = new XMLHttpRequest();
+var xhr = new XMLHttpRequest();                                                         //Create XMLHttpRequest object
 
-xhr.onload = function() {
-    if(xhr.status === 200) {
+xhr.onload = function() {                                                               //When readystate changes
+    if(xhr.status === 200) {                                                            //if server status was ok
         responseObject = JSON.parse(xhr.responseText);
 
+    //BUILD UP STRING WITH NEW CONTENT (could also use DOM manipulation)
         var newContent = '';
-        for (var i = 0; i < responseObject.events.length; i++) {
+        for (var i = 0; i < responseObject.events.length; i++) {                        //Loop through JSON object
             newContent += '<div class="event">'; 
             newContent += '<img src="' + responseObject.events[i].map +'"';
             newContent += 'alt="' + responseObject.events[i].location +'" />';
@@ -14,10 +15,11 @@ xhr.onload = function() {
             newContent += '</div>'
         }
         
-        document.getElementById('content').innerHTML = newContent;
+        //Update page with new content
+        document.getElementById('content').innerHTML = newContent;  
 
     }
 };
 
-xhr.open('GET', 'Chapter 8 - AJAX & JSON\\data\\data.json', true);
-xhr.send();
+xhr.open('GET', 'data/data.json', true);                                                //Prepare the request
+xhr.send();                                                                             //Send the request
