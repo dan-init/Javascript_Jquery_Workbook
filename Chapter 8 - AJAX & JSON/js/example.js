@@ -1,68 +1,70 @@
-$(function() {
+$(function() {                                                                          //Function is called when the DOM is ready
 
-    var times;
+    var times;                                                                          //Declare global variable
 
-    $.ajax({
-        beforeSend: function(xhr) {
-            if (xhr.overrideMimeType) {
-                xhr.overrideMimeType("application/json");
+    $.ajax({                                                                            //Setup Request
+        beforeSend: function(xhr) {                                                     //Before requesting data
+            if (xhr.overrideMimeType) {                                                 //If supported
+                xhr.overrideMimeType("application/json");                               //Set MIME to prevent errors
             }
         }
     });
 
-    function loadTimetable() {
-        $.getJSON('data/example.json')
-        .done(function(data) {
-            times = data;
-        }).fail(function() {
+    //FUNCTION THAT COLLECTS DATA FROM THE JSON FILE
+    function loadTimetable() {                                                          //Delcare Function                                    
+        $.getJSON('data/example.json')                                                  //Try to collect JSON data
+        .done(function(data) {                                                          //If successful
+            times = data;                                                               //Store it in a variable
+        }).fail(function() {                                                            //If a problem show message
             $('#event').html('Sorry, we could not load the timetable at the moment');
         });
     }
 
-    loadTimetable();
+    loadTimetable();                                                                    //Call the function
 
-    $('#content').on('click', '#event a', function(e) {
+    $('#content').on('click', '#event a', function(e) {                                 //User clicks on place
 
-        e.preventDefault();
-        var loc = this.id.toUpperCase();
+        e.preventDefault();                                                             //Prevent new page load
+        var loc = this.id.toUpperCase();                                                //Get value of id attr
 
-        var newContent = '';
-        for (var i = 0; i < times[loc].length; i++) {
+        var newContent = '';                                                            //To build up the timetable
+        for (var i = 0; i < times[loc].length; i++) {                                   //Loop through the sessions
             newContent += '<li><span class="time">' + times[loc] [i].time + '</span>';
             newContent += '<a href="descriptions.html#';
             newContent += times[loc][i].title.replace(/ /g, '-') + '">';
             newContent += times[loc][i].title + '</a></li>';
         }
 
-        $('#sessions').html('<ul>' + newContent + '</ul>');
+        $('#sessions').html('<ul>' + newContent + '</ul>');                             //Display time
 
-        $('#event a.current').removeClass('current');
+        $('#event a.current').removeClass('current');                                   //Update selected link
         $(this).addClass('current');
 
-        $('#details').text('');
+        $('#details').text('');                                                         //Clear third column
     });
 
+    //CLICK ON A SESSION TO LOAD THE DESCRIPTION
+    $('#content').on('click', '#sessions li a', function(e) {                           //Click on session
+        e.preventDefault();                                                             //Prevent loading
+        var fragment = this.href;                                                       //Title is in href
 
-    $('#content').on('click', '#sessions li a', function(e) {
-        e.preventDefault();
-        var fragment = this.href;
+        fragment = fragment.replace('#', ' #');                                         //Add space after#
+        $('#details').load(fragment);                                                   //To load info
 
-        fragment = fragment.replace('#', ' #');
-        $('#details').load(fragment);
-
-        $('#sessions a.current').removeClass('current');
+        $('#sessions a.current').removeClass('current');                                //Update selected
         $(this).addClass('current');
     });
 
-    $('nav a').on('click', function(e) {
-        e.preventDefault();
-        var url = this.href;
+    //CLICK ON PRIMARY NAVIGATION
+    $('nav a').on('click', function(e) {                                                //Click on nav
+        e.preventDefault();                                                             //Prevent loading
+        var url = this.href;                                                            //Get URL to load
 
-        $('nav a.current').removeClass('current');
+        $('nav a.current').removeClass('current');                                      //Update nav
         $(this).addClass('current');
 
-        $('#container').remove();
-        $('#content').load(url + ' #container').hide().fadeIn('slow');
+        $('#container').remove();                                                       //Remove old
+        $('#content').load(url + ' #container').hide().fadeIn('slow');                  //Add new
     });
 
 });
